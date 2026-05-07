@@ -1,0 +1,223 @@
+import grpc
+import warnings
+
+import inventory_pb2 as inventory__pb2
+
+GRPC_GENERATED_VERSION = '1.80.0'
+GRPC_VERSION = grpc.__version__
+_version_not_supported = False
+
+try:
+    from grpc._utilities import first_version_is_lower
+    _version_not_supported = first_version_is_lower(GRPC_VERSION, GRPC_GENERATED_VERSION)
+except ImportError:
+    _version_not_supported = True
+
+if _version_not_supported:
+    raise RuntimeError(
+        f'The grpc package installed is at version {GRPC_VERSION},'
+        + ' but the generated code in inventory_pb2_grpc.py depends on'
+        + f' grpcio>={GRPC_GENERATED_VERSION}.'
+        + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
+        + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
+    )
+
+
+class InventoryServiceStub(object):
+    
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.CheckStock = channel.unary_unary(
+                '/inventory.InventoryService/CheckStock',
+                request_serializer=inventory__pb2.CheckStockRequest.SerializeToString,
+                response_deserializer=inventory__pb2.CheckStockResponse.FromString,
+                _registered_method=True)
+        self.ReserveStock = channel.unary_unary(
+                '/inventory.InventoryService/ReserveStock',
+                request_serializer=inventory__pb2.ReserveStockRequest.SerializeToString,
+                response_deserializer=inventory__pb2.ReserveStockResponse.FromString,
+                _registered_method=True)
+        self.ReleaseStock = channel.unary_unary(
+                '/inventory.InventoryService/ReleaseStock',
+                request_serializer=inventory__pb2.ReleaseStockRequest.SerializeToString,
+                response_deserializer=inventory__pb2.ReleaseStockResponse.FromString,
+                _registered_method=True)
+        self.Health = channel.unary_unary(
+                '/inventory.InventoryService/Health',
+                request_serializer=inventory__pb2.HealthRequest.SerializeToString,
+                response_deserializer=inventory__pb2.HealthResponse.FromString,
+                _registered_method=True)
+
+
+class InventoryServiceServicer(object):
+   
+
+    def CheckStock(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ReserveStock(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ReleaseStock(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def Health(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_InventoryServiceServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'CheckStock': grpc.unary_unary_rpc_method_handler(
+                    servicer.CheckStock,
+                    request_deserializer=inventory__pb2.CheckStockRequest.FromString,
+                    response_serializer=inventory__pb2.CheckStockResponse.SerializeToString,
+            ),
+            'ReserveStock': grpc.unary_unary_rpc_method_handler(
+                    servicer.ReserveStock,
+                    request_deserializer=inventory__pb2.ReserveStockRequest.FromString,
+                    response_serializer=inventory__pb2.ReserveStockResponse.SerializeToString,
+            ),
+            'ReleaseStock': grpc.unary_unary_rpc_method_handler(
+                    servicer.ReleaseStock,
+                    request_deserializer=inventory__pb2.ReleaseStockRequest.FromString,
+                    response_serializer=inventory__pb2.ReleaseStockResponse.SerializeToString,
+            ),
+            'Health': grpc.unary_unary_rpc_method_handler(
+                    servicer.Health,
+                    request_deserializer=inventory__pb2.HealthRequest.FromString,
+                    response_serializer=inventory__pb2.HealthResponse.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'inventory.InventoryService', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('inventory.InventoryService', rpc_method_handlers)
+
+
+class InventoryService(object):
+    
+
+    @staticmethod
+    def CheckStock(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/inventory.InventoryService/CheckStock',
+            inventory__pb2.CheckStockRequest.SerializeToString,
+            inventory__pb2.CheckStockResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ReserveStock(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/inventory.InventoryService/ReserveStock',
+            inventory__pb2.ReserveStockRequest.SerializeToString,
+            inventory__pb2.ReserveStockResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ReleaseStock(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/inventory.InventoryService/ReleaseStock',
+            inventory__pb2.ReleaseStockRequest.SerializeToString,
+            inventory__pb2.ReleaseStockResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def Health(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/inventory.InventoryService/Health',
+            inventory__pb2.HealthRequest.SerializeToString,
+            inventory__pb2.HealthResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)

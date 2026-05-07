@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package payment;
+
+// ─── Payment Service ──────────────────────────────────────────────────────────
+service PaymentService {
+  rpc Compute  (ComputeRequest)  returns (ComputeResponse);
+  rpc Crash    (CrashRequest)    returns (CrashResponse);    // force failure (for CB demo)
+  rpc Recover  (RecoverRequest)  returns (RecoverResponse);  // force recovery
+  rpc Health   (HealthRequest)   returns (HealthResponse);
+}
+
+// ─── Shared ───────────────────────────────────────────────────────────────────
+message VectorClockEntry {
+  string process_id = 1;
+  int32  counter    = 2;
+}
+
+// ─── Compute (process a payment) ─────────────────────────────────────────────
+message ComputeRequest {
+  string                  order_id      = 1;
+  double                  amount        = 2;
+  string                  customer_id   = 3;
+  repeated VectorClockEntry vector_clock = 4;
+}
+
+message ComputeResponse {
+  string                  transaction_id = 1;
+  string                  status         = 2;  // SUCCESS | FAILED | DEGRADED
+  string                  message        = 3;
+  repeated VectorClockEntry vector_clock  = 4;
+}
+
+// ─── Crash (simulate failure for circuit-breaker testing) ────────────────────
+message CrashRequest {
+  string reason = 1;
+}
+
+message CrashResponse {
+  bool   ok      = 1;
+  string message = 2;
+}
+
+// ─── Recover (bring service back up) ─────────────────────────────────────────
+message RecoverRequest {}
+
+message RecoverResponse {
+  bool   ok      = 1;
+  string message = 2;
+}
+
+// ─── Health ───────────────────────────────────────────────────────────────────
+message HealthRequest {}
+
+message HealthResponse {
+  string status = 1;   // UP | DOWN | DEGRADED
+}

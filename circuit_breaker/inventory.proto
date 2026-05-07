@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package inventory;
+
+// ─── Inventory Service ────────────────────────────────────────────────────────
+service InventoryService {
+  rpc CheckStock   (CheckStockRequest)   returns (CheckStockResponse);
+  rpc ReserveStock (ReserveStockRequest) returns (ReserveStockResponse);
+  rpc ReleaseStock (ReleaseStockRequest) returns (ReleaseStockResponse);
+  rpc Health       (HealthRequest)       returns (HealthResponse);
+}
+
+// ─── Shared ───────────────────────────────────────────────────────────────────
+message VectorClockEntry {
+  string process_id = 1;
+  int32  counter    = 2;
+}
+
+// ─── CheckStock ───────────────────────────────────────────────────────────────
+message CheckStockRequest {
+  string product_id = 1;
+  int32  quantity   = 2;
+  repeated VectorClockEntry vector_clock = 3;
+}
+
+message CheckStockResponse {
+  bool                    available    = 1;
+  int32                   stock_level  = 2;
+  repeated VectorClockEntry vector_clock = 3;
+}
+
+// ─── ReserveStock ─────────────────────────────────────────────────────────────
+message ReserveStockRequest {
+  string order_id   = 1;
+  string product_id = 2;
+  int32  quantity   = 3;
+  repeated VectorClockEntry vector_clock = 4;
+}
+
+message ReserveStockResponse {
+  bool                    success      = 1;
+  string                  reservation_id = 2;
+  string                  message      = 3;
+  repeated VectorClockEntry vector_clock = 4;
+}
+
+// ─── ReleaseStock (on cancel / rollback) ──────────────────────────────────────
+message ReleaseStockRequest {
+  string reservation_id = 1;
+  string reason         = 2;
+}
+
+message ReleaseStockResponse {
+  bool   success = 1;
+  string message = 2;
+}
+
+// ─── Health ───────────────────────────────────────────────────────────────────
+message HealthRequest {}
+
+message HealthResponse {
+  string status = 1;   // UP | DOWN | DEGRADED
+}
