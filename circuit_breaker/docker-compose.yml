@@ -1,0 +1,67 @@
+version: "3.9"
+
+# ─── Networks ────────────────────────────────────────────────────────────────
+networks:
+  microservices_net:
+    driver: bridge
+
+# ─── Services ─────────────────────────────────────────────────────────────────
+services:
+
+  # ── Order Service (port 50051 gRPC | 8000 FastAPI) ──────────────────────────
+  order_service:
+    build:
+      context: ./order_service
+      dockerfile: Dockerfile
+    container_name: order_service
+    ports:
+      - "50051:50051"   # gRPC
+      - "8000:8000"     # FastAPI REST (optional gateway)
+    environment:
+      PAYMENT_ADDR:   "payment_service:50052"
+      INVENTORY_ADDR: "inventory_service:50053"
+      LOG_LEVEL:      "INFO"
+    depends_on:
+      - payment_service
+      - inventory_service
+    networks:
+      - microservices_net
+    restart: on-failure
+
+  # ── Payment Service (port 50052 gRPC) ────────────────────────────────────────
+  payment_service:
+    build:
+      context: ./payment_service
+      dockerfile: Dockerfile
+    container_name: payment_service
+    ports:
+      - "50052:50052"   # gRPC
+      - "8001:8001"     # FastAPI /compute /crash /recover (for Houda)
+    environment:
+      FAILURE_THRESHOLD:  "5"
+      RECOVERY_TIMEOUT:   "30"
+      SIMULATE_FAIL_RATE: "0.2"   # 20 % random failures
+      LOG_LEVEL:          "INFO"
+    networks:
+      - microservices_net
+    restart: on-failure
+
+  # ── Inventory Service (port 50053 gRPC) ───────────────────────────────────────
+  inventory_service:
+    build:
+      context: ./inventory_service
+      dockerfile: Dockerfile
+    container_name: inventory_service
+    ports:
+      - "50053:50053"   # gRPC
+      - "8002:8002"     # FastAPI /stock (for Houda)
+    environment:
+      INITIAL_STOCK_PROD_001: "100"
+      INITIAL_STOCK_PROD_002: "50"
+      INITIAL_STOCK_PROD_003: "200"
+      LATENCY_MIN_MS: "30"
+      LATENCY_MAX_MS: "150"
+      LOG_LEVEL:      "INFO"
+    networks:
+      - microservices_net
+    restart: on-failure
