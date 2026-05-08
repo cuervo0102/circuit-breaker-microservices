@@ -1,0 +1,6 @@
+grpcio==1.80.0
+grpcio-tools==1.80.0
+fastapi==0.136.1
+uvicorn==0.46.0
+pydantic==2.13.4
+protobuf==6.33.6
